@@ -302,13 +302,13 @@ h1 em {
 const petalsEl = document.getElementById('petals');
 const emojis = ['🌸','🌷','🌺'];
 
-for (let i = 0; i < 18; i++) {
+for (let i = 0; i < 30; i++) {
   const p = document.createElement('div');
   p.className = 'petal';
   p.textContent = emojis[Math.floor(Math.random() * emojis.length)];
 
   const size   = 14 + Math.random() * 18;
-  const dur    = (9  + Math.random() * 8).toFixed(1);
+  const dur    = (4  + Math.random() * 8).toFixed(1);
   const delay  = (Math.random() * 14).toFixed(1);
   const spin   = ((Math.random() - 0.5) * 200).toFixed(1);
   const sway   = ((Math.random() - 0.5) * 140).toFixed(1);
