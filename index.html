@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -10,255 +9,259 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-min-height: 100vh;
-display: flex;
-align-items: center;
-justify-content: center;
-background: linear-gradient(135deg, #fff5f0 0%, #fde8f0 40%, #fdf0e8 100%);
-font-family: ‘Lato’, sans-serif;
-overflow: hidden;
-animation: bgDrift 12s ease-in-out infinite alternate;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* FIX: removed overflow:hidden so card isn't clipped on small screens */
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 24px 0;
+  background: linear-gradient(135deg, #fff5f0 0%, #fde8f0 40%, #fdf0e8 100%);
+  font-family: 'Lato', sans-serif;
+  /* FIX: removed hue-rotate from bgDrift — causes glitches on iOS */
+  animation: bgDrift 12s ease-in-out infinite alternate;
 }
 @keyframes bgDrift {
-from { background-position: 0% 50%; filter: hue-rotate(0deg); }
-to { background-position: 100% 50%; filter: hue-rotate(8deg); }
+  from { background-position: 0% 50%; }
+  to   { background-position: 100% 50%; }
 }
 
 .bg-circle {
-position: fixed;
-border-radius: 50%;
-pointer-events: none;
-z-index: 0;
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
 }
 .bg-circle.c1 {
-width: 500px; height: 500px;
-top: -120px; right: -120px;
-background: radial-gradient(circle, rgba(255,182,193,0.3) 0%, transparent 70%);
-animation: breathe 7s ease-in-out infinite alternate;
+  width: 500px; height: 500px;
+  top: -120px; right: -120px;
+  background: radial-gradient(circle, rgba(255,182,193,0.3) 0%, transparent 70%);
+  animation: breathe 7s ease-in-out infinite alternate;
 }
 .bg-circle.c2 {
-width: 400px; height: 400px;
-bottom: -100px; left: -100px;
-background: radial-gradient(circle, rgba(255,218,185,0.35) 0%, transparent 70%);
-animation: breathe 9s ease-in-out infinite alternate-reverse;
+  width: 400px; height: 400px;
+  bottom: -100px; left: -100px;
+  background: radial-gradient(circle, rgba(255,218,185,0.35) 0%, transparent 70%);
+  animation: breathe 9s ease-in-out infinite alternate-reverse;
 }
 @keyframes breathe {
-from { transform: scale(1); }
-to { transform: scale(1.15); }
+  from { transform: scale(1); }
+  to   { transform: scale(1.15); }
 }
 
+/* FIX: petals use inline style font-size instead of broken CSS var (--sz was rendered as em-dash) */
 .petal {
-position: fixed;
-pointer-events: none;
-z-index: 1;
-font-size: var(–sz);
-opacity: 0;
-animation: drift var(–dur) ease-in var(–delay) infinite;
+  position: fixed;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  /* duration, delay, spin, sway set via JS as data-attributes + inline animation */
 }
 @keyframes drift {
-0% { opacity: 0; transform: translateY(-30px) rotate(0deg) translateX(0px); }
-15% { opacity: 0.85; }
-85% { opacity: 0.6; }
-100% { opacity: 0; transform: translateY(105vh) rotate(var(–spin)) translateX(var(–sway)); }
+  0%   { opacity: 0;    transform: translateY(-30px) rotate(0deg) translateX(0px); }
+  15%  { opacity: 0.85; }
+  85%  { opacity: 0.6;  }
+  100% { opacity: 0;    transform: translateY(105vh) rotate(var(--spin)) translateX(var(--sway)); }
 }
 
 .card {
-position: relative;
-z-index: 2;
-width: min(92vw, 400px);
-background: rgba(255,255,255,0.88);
-backdrop-filter: blur(12px);
-border-radius: 24px;
-padding: 44px 36px 40px;
-text-align: center;
-box-shadow:
-0 4px 24px rgba(220,130,150,0.12),
-0 20px 60px rgba(180,100,120,0.1),
-0 0 0 1px rgba(255,200,210,0.5);
-opacity: 0;
-transform: translateY(20px) scale(0.97);
-animation: cardIn 1.2s cubic-bezier(0.22,1,0.36,1) 0.2s forwards;
-overflow: hidden;
+  position: relative;
+  z-index: 2;
+  width: min(92vw, 400px);
+  background: rgba(255,255,255,0.88);
+  /* FIX: added -webkit- prefix for Safari */
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border-radius: 24px;
+  padding: 44px 36px 40px;
+  text-align: center;
+  box-shadow:
+    0 4px 24px rgba(220,130,150,0.12),
+    0 20px 60px rgba(180,100,120,0.1),
+    0 0 0 1px rgba(255,200,210,0.5);
+  opacity: 0;
+  transform: translateY(20px) scale(0.97);
+  animation: cardIn 1.2s cubic-bezier(0.22,1,0.36,1) 0.2s forwards;
+  overflow: hidden;
 }
 @keyframes cardIn {
-to { opacity: 1; transform: translateY(0) scale(1); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* Shimmer sweep */
 .card::after {
-content: ‘’;
-position: absolute;
-top: 0; left: -100%;
-width: 60%; height: 100%;
-background: linear-gradient(105deg, transparent, rgba(255,255,255,0.22), transparent);
-animation: shimmer 7s ease-in-out 3s infinite;
-pointer-events: none;
-border-radius: 24px;
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 60%; height: 100%;
+  background: linear-gradient(105deg, transparent, rgba(255,255,255,0.22), transparent);
+  animation: shimmer 7s ease-in-out 3s infinite;
+  pointer-events: none;
+  border-radius: 24px;
 }
 @keyframes shimmer {
-0% { left: -100%; }
-40%, 100% { left: 160%; }
+  0%       { left: -100%; }
+  40%, 100% { left: 160%; }
 }
 
 .flowers {
-font-size: 42px;
-letter-spacing: 4px;
-margin-bottom: 20px;
-display: block;
-opacity: 0;
-filter: drop-shadow(0 2px 6px rgba(220,100,130,0.2));
-animation: popIn 0.8s cubic-bezier(0.34,1.56,0.64,1) 0.9s forwards;
+  font-size: 42px;
+  letter-spacing: 4px;
+  margin-bottom: 20px;
+  display: block;
+  opacity: 0;
+  filter: drop-shadow(0 2px 6px rgba(220,100,130,0.2));
+  animation: popIn 0.8s cubic-bezier(0.34,1.56,0.64,1) 0.9s forwards;
 }
 @keyframes popIn {
-from { opacity: 0; transform: scale(0.5) rotate(-10deg); }
-to { opacity: 1; transform: scale(1) rotate(0deg); }
+  from { opacity: 0; transform: scale(0.5) rotate(-10deg); }
+  to   { opacity: 1; transform: scale(1) rotate(0deg); }
 }
-/* Bob after appearing */
 .flowers.ready {
-opacity: 1;
-animation: bob 4s ease-in-out infinite;
+  opacity: 1;
+  animation: bob 4s ease-in-out infinite;
 }
 @keyframes bob {
-0%, 100% { transform: translateY(0); }
-50% { transform: translateY(-6px); }
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-6px); }
 }
 
 .tag {
-font-size: 11px;
-letter-spacing: 0.22em;
-text-transform: uppercase;
-color: #d4849a;
-font-weight: 400;
-margin-bottom: 12px;
-opacity: 0;
-animation: fadeUp 0.8s ease 1.2s forwards;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #d4849a;
+  font-weight: 400;
+  margin-bottom: 12px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 1.2s forwards;
 }
 
 h1 {
-font-family: ‘Playfair Display’, serif;
-font-weight: 400;
-font-size: clamp(30px, 8vw, 40px);
-line-height: 1.2;
-color: #3a2030;
-margin-bottom: 4px;
-opacity: 0;
-animation: fadeUp 0.8s ease 1.4s forwards;
+  font-family: 'Playfair Display', serif;
+  font-weight: 400;
+  font-size: clamp(30px, 8vw, 40px);
+  line-height: 1.2;
+  color: #3a2030;
+  margin-bottom: 4px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 1.4s forwards;
 }
 h1 em {
-font-style: italic;
-color: #c0607a;
+  font-style: italic;
+  color: #c0607a;
 }
 
 .divider {
-display: flex;
-align-items: center;
-gap: 10px;
-margin: 20px 0;
-opacity: 0;
-animation: fadeUp 0.8s ease 1.6s forwards;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 0;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 1.6s forwards;
 }
 .divider::before, .divider::after {
-content: ‘’;
-flex: 1;
-height: 1px;
-background: linear-gradient(90deg, transparent, rgba(200,140,160,0.4), transparent);
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(200,140,160,0.4), transparent);
 }
 .divider span {
-font-size: 14px;
-color: #d4849a;
-display: inline-block;
-animation: spinStar 10s linear infinite;
+  font-size: 14px;
+  color: #d4849a;
+  display: inline-block;
+  animation: spinStar 10s linear infinite;
 }
 @keyframes spinStar {
-from { transform: rotate(0deg); }
-to { transform: rotate(360deg); }
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
 }
 
 .scripture {
-font-family: ‘Playfair Display’, serif;
-font-style: italic;
-font-size: 15px;
-line-height: 1.8;
-color: #6b4050;
-opacity: 0;
-animation: fadeUp 0.8s ease 1.8s forwards;
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 15px;
+  line-height: 1.8;
+  color: #6b4050;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 1.8s forwards;
 }
 .ref {
-display: block;
-font-family: ‘Lato’, sans-serif;
-font-style: normal;
-font-size: 10.5px;
-letter-spacing: 0.18em;
-text-transform: uppercase;
-color: #c0a0a8;
-margin-top: 10px;
+  display: block;
+  font-family: 'Lato', sans-serif;
+  font-style: normal;
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #c0a0a8;
+  margin-top: 10px;
 }
 
 .message {
-margin-top: 22px;
-font-size: 14.5px;
-line-height: 1.85;
-color: #7a5060;
-font-weight: 300;
-opacity: 0;
-animation: fadeUp 0.8s ease 2s forwards;
+  margin-top: 22px;
+  font-size: 14.5px;
+  line-height: 1.85;
+  color: #7a5060;
+  font-weight: 300;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 2s forwards;
 }
 
 .closing {
-margin-top: 24px;
-font-family: ‘Playfair Display’, serif;
-font-style: italic;
-font-size: 20px;
-color: #c0607a;
-opacity: 0;
-animation: fadeUp 0.8s ease 2.2s forwards;
+  margin-top: 24px;
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 20px;
+  color: #c0607a;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 2.2s forwards;
 }
 .closing.ready {
-opacity: 1;
-animation: heartbeat 3s ease-in-out infinite;
+  opacity: 1;
+  animation: heartbeat 3s ease-in-out infinite;
 }
 @keyframes heartbeat {
-0%, 100% { transform: scale(1); }
-14% { transform: scale(1.05); }
-28% { transform: scale(1); }
-42% { transform: scale(1.03); }
+  0%, 100% { transform: scale(1); }
+  14%       { transform: scale(1.05); }
+  28%       { transform: scale(1); }
+  42%       { transform: scale(1.03); }
 }
 
 .sig {
-margin-top: 14px;
-font-size: 13px;
-letter-spacing: 0.08em;
-color: #b07888;
-font-family: ‘Lato’, sans-serif;
-font-weight: 300;
-opacity: 0;
-animation: fadeUp 0.8s ease 2.5s forwards;
+  margin-top: 14px;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  color: #b07888;
+  font-family: 'Lato', sans-serif;
+  font-weight: 300;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 2.5s forwards;
 }
 
 .flowers-bottom {
-font-size: 22px;
-letter-spacing: 6px;
-margin-top: 20px;
-display: block;
-opacity: 0;
-filter: drop-shadow(0 1px 3px rgba(220,100,130,0.15));
-animation: fadeUp 0.8s ease 2.7s forwards;
+  font-size: 22px;
+  letter-spacing: 6px;
+  margin-top: 20px;
+  display: block;
+  opacity: 0;
+  filter: drop-shadow(0 1px 3px rgba(220,100,130,0.15));
+  animation: fadeUp 0.8s ease 2.7s forwards;
 }
 .flowers-bottom.ready {
-opacity: 1;
-animation: sway 5s ease-in-out infinite;
+  opacity: 1;
+  animation: sway 5s ease-in-out infinite;
 }
 @keyframes sway {
-0%, 100% { transform: rotate(-2deg); }
-50% { transform: rotate(2deg); }
+  0%, 100% { transform: rotate(-2deg); }
+  50%       { transform: rotate(2deg); }
 }
 
 @keyframes fadeUp {
-from { opacity: 0; transform: translateY(12px); }
-to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 </style>
-
 </head>
 <body>
 
@@ -267,63 +270,66 @@ to { opacity: 1; transform: translateY(0); }
 <div id="petals"></div>
 
 <div class="card">
-<span class="flowers" id="flowers">🌸🌷🌸</span>
+  <span class="flowers" id="flowers">🌸🌷🌸</span>
 
-<p class="tag">With love &amp; gratitude</p>
-<h1>Happy <em>Mother's Day</em></h1>
+  <p class="tag">With love &amp; gratitude</p>
+  <h1>Happy <em>Mother's Day</em></h1>
 
-<div class="divider"><span>✦</span></div>
+  <div class="divider"><span>✦</span></div>
 
-<p class="scripture">
-"Her children rise up and call her blessed."
-<span class="ref">Proverbs 31:28</span>
-</p>
+  <p class="scripture">
+    "Her children rise up and call her blessed."
+    <span class="ref">Proverbs 31:28</span>
+  </p>
 
-<p class="message">
-Thank you for your endless love,<br>
-your prayers, and your grace.<br>
-You are more than a blessing —<br>
-you are a gift straight from above.
-</p>
+  <p class="message">
+    Thank you for your endless love,<br>
+    your prayers, and your grace.<br>
+    You are more than a blessing —<br>
+    you are a gift straight from above.
+  </p>
 
-<p class="closing" id="closing">I love you, Mom 🤍</p>
+  <p class="closing" id="closing">I love you, Mom 🤍</p>
 
-<p class="sig">— Aaron, Tanya, Riley, Addison &amp; Zoe</p>
+  <p class="sig">— Aaron, Tanya, Riley, Addison &amp; Zoe</p>
 
-<span class="flowers-bottom" id="flowersBottom">🌿🌸🌿</span>
-
+  <span class="flowers-bottom" id="flowersBottom">🌿🌸🌿</span>
 </div>
 
 <script>
-// Falling petals
+// FIX: CSS custom properties were corrupted (-- became em-dash –) in the original.
+// Now we set font-size and animation directly via inline style strings with real hyphens.
 const petalsEl = document.getElementById('petals');
 const emojis = ['🌸','🌷','🌺'];
+
 for (let i = 0; i < 18; i++) {
-const p = document.createElement('div');
-p.className = 'petal';
-p.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-const sway = (Math.random() - 0.5) * 140;
-p.style.cssText = `
-left:${Math.random()*100}%;
---sz:${14+Math.random()*18}px;
---dur:${9+Math.random()*8}s;
---delay:${Math.random()*14}s;
---spin:${(Math.random()-0.5)*200}deg;
---sway:${sway}px;
-`;
-petalsEl.appendChild(p);
+  const p = document.createElement('div');
+  p.className = 'petal';
+  p.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+
+  const size   = 14 + Math.random() * 18;
+  const dur    = (9  + Math.random() * 8).toFixed(1);
+  const delay  = (Math.random() * 14).toFixed(1);
+  const spin   = ((Math.random() - 0.5) * 200).toFixed(1);
+  const sway   = ((Math.random() - 0.5) * 140).toFixed(1);
+  const left   = (Math.random() * 100).toFixed(1);
+
+  // Set CSS custom properties as inline style (guaranteed real hyphens from JS strings)
+  p.style.cssText = [
+    `left: ${left}%`,
+    `font-size: ${size.toFixed(1)}px`,
+    `--spin: ${spin}deg`,
+    `--sway: ${sway}px`,
+    `animation: drift ${dur}s ease-in ${delay}s infinite`,
+  ].join('; ');
+
+  petalsEl.appendChild(p);
 }
 
 // Switch to looping animations after entrance
-setTimeout(() => {
-document.getElementById('flowers').classList.add('ready');
-}, 1800);
-setTimeout(() => {
-document.getElementById('closing').classList.add('ready');
-}, 3200);
-setTimeout(() => {
-document.getElementById('flowersBottom').classList.add('ready');
-}, 3500);
+setTimeout(() => { document.getElementById('flowers').classList.add('ready'); },     1800);
+setTimeout(() => { document.getElementById('closing').classList.add('ready'); },     3200);
+setTimeout(() => { document.getElementById('flowersBottom').classList.add('ready'); }, 3500);
 </script>
 
 </body>
